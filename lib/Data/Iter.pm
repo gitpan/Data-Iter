@@ -10,13 +10,13 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our %EXPORT_TAGS = ( 'all' => [ qw(iter counter COUNTER LAST_COUNTER value VALUE key KEY get GET getnext GETNEXT transform_array_to_hash) ] );
+our %EXPORT_TAGS = ( 'all' => [ qw(iter counter COUNTER LAST_COUNTER value VALUE key KEY get GET getnext GETNEXT GETPREV IS_LAST IS_FIRST transform_array_to_hash) ] );
 
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.01.12';
+our $VERSION = '0.01.13';
 
 # Preloaded methods go here.
 
@@ -82,12 +82,12 @@ sub iter
 		}
 		else
 		{
-			croak "iter() only accepts reference to ARRAY or HASH";
+			croak "iter() only accepts reference to ARRAY or HASH. Found: ". ref( $ref_data );
 		}
 	}
 	else
 	{
-		croak "iter() only accepts one parameter (reference to ARRAY or HASH)";
+		croak "iter() only accepts one parameter (reference to ARRAY or HASH). Found extra args: ", scalar @_;
 	}
 	
 return @result;  
@@ -171,11 +171,32 @@ return $result;
 
 sub GETNEXT { goto &getnext }
 
+sub GETPREV
+{
+	my $this = _handle_this( \@_ );
+
+return $this->getnext( $this->counter-1 );
+}
+
 sub LAST_COUNTER 
 { 
 	my $this = _handle_this( \@_ );
 
 return scalar @{ $this->[_LIST_REF] } - 1;
+}
+
+sub IS_LAST
+{ 
+    my $this = _handle_this( \@_ );
+
+    return $this->COUNTER == $this->LAST_COUNTER;
+}
+
+sub IS_FIRST
+{ 
+    my $this = _handle_this( \@_ );
+
+    return $this->COUNTER == 0;
 }
 
 
@@ -341,6 +362,10 @@ Returns the current counter (starting at 0).
 
 Returns the highest counter. Its a synonmy for the length of the list-1.
 
+=head3 IS_LAST(), IS_FIRST()
+
+Returns true if is the highest or first counter, respectively.
+
 =head3 getvalue( index )
 
 Returns the value at index. It behaves like an array index.
@@ -368,6 +393,10 @@ Example:
 Returns the next Data::Iter object. It is a shortcut for get(1+counter).
 
 Same as $_->getnext;
+
+=head3 GETPREV()
+
+Returns the prev Data::Iter object. It is a shortcut for get(counter-1).
 
 =head3 PAIR()
 
