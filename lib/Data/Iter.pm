@@ -6,6 +6,10 @@ use warnings;
 
 use Carp;
 
+
+$Carp::Verbose = 1;
+
+
 require Exporter;
 
 our @ISA = qw(Exporter);
@@ -16,7 +20,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.01.13';
+our $VERSION = '0.2';
 
 # Preloaded methods go here.
 
@@ -216,8 +220,6 @@ return ();
 
 sub PAIR { goto &pair }
 
-
-
 # some nice service functions
 
     sub transform_array_to_hash
@@ -410,12 +412,12 @@ pair when the iteration is at the right element or undef when it isnt. See here
     {
        my ( $key, $value ) = $r->PAIR() 
 
-       if( $key )
+       if( defined $value )
        {
        }
     }
 
-Note: You have to test for undef of $key or $value.
+Note: You have to test for undef of $key or $value, as pair returns every 2nd time a valid result.
 
 =head1 $Data::Iter::Sort
 

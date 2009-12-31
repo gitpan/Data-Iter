@@ -5,8 +5,8 @@
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test;
-BEGIN { plan tests => 5 };
+use Test::More qw(no_plan);
+#BEGIN { plan tests => 5 };
 use Data::Iter qw(:all);
 use IO::Extended qw(:all);
 use Data::Dump qw(dump);
@@ -134,6 +134,8 @@ ok($str1 eq '1234ab');
 
 my $str2;
 
+%numbers = ( 1 => 'eins', 2 => 'zwei' );
+
 $Data::Iter::Sort = "sort_num";
 
 	foreach ( iter \%numbers )
@@ -141,10 +143,9 @@ $Data::Iter::Sort = "sort_num";
 		$str2.=key;
 	}
 
-println $str2;
+#diag( "STRING ".$str2 );
 
-ok($str2 eq 'ab1234');
-
+ok($str2 eq '12');
 
 my $str3;
 
@@ -157,9 +158,9 @@ $Data::Iter::Sort = "::sort_wild";
 		$str3.=key;
 	}
 
-println $str3;
+#diag( $str3 );
 
-ok($str3 eq 'ab1423');
+ok($str3 eq '21');
 
 
     foreach my $r ( iter [qw(b red a white)] )

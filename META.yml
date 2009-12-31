@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Data-Iter
-version:            0.01.13
+version:            0.2
 abstract:           easily iterate over a hash/array
 author:
     - A. U. Thor <a.u.thor@a.galaxy.far.far.away>
